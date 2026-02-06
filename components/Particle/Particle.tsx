@@ -23,7 +23,16 @@ export class Particle {
     }
 
     applyForce(vec_to_cursor: Vector): void {
+
+        if ((vec_to_cursor.x == 0 && vec_to_cursor.y == 0) && this.velocity.getMagnitude() <= this.settings.F_error) {
+            if (this.settings.velocityIndicator) {
+                this.color = this.og_color;
+            }
+            return;
+        }
+        
         let totalForce: Vector = new Vector(0, 0);
+
         {
             const vec_to_spawn = this.pos.to(this.spawn.x, this.spawn.y);
             const scale_vec_generated = this.accelerationSpawn(vec_to_spawn.getMagnitude());

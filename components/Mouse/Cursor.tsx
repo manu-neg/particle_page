@@ -32,9 +32,18 @@ export default class Cursor {
     }
 
     applyForces(particles: Particle[]): void {
+        let dp: Vector;
+        let distance: number;
+        let Zero = new Vector(0, 0);
         for (let particle of particles) {
-            const vec_to_cursor = particle.pos.to(this.pos.x, this.pos.y);
-            particle.applyForce(vec_to_cursor);
+            dp = Vector.sub(this.pos, particle.pos);
+            distance = Math.sqrt((dp.x * dp.x) + (dp.y * dp.y));
+            if (distance <= this.radius) {
+                const vec_to_cursor = particle.pos.to(this.pos.x, this.pos.y);
+                particle.applyForce(vec_to_cursor);
+            } else {
+                particle.applyForce(Zero);
+            }
         }
     }
 

@@ -130,6 +130,58 @@ export function ParticleCanvas() {
         }
     }
 
+    function updateParticles(): void {
+        if (cursor) {
+            cursor.applyForces(particles);
+        }
+    }
+
+    function updateCanvas(): void {
+        
+        if (canvas && cursor && particles) {
+            const ctx = canvas.getContext("2d");
+
+            if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((particle: Particle) => {
+                    drawParticle(ctx, particle);
+                });
+                
+                drawCursor(ctx);
+            }
+        }
+    }
+
+    
+    function updateCursor(event: React.MouseEvent): void {
+        if (event && bounds && cursor) {
+            cursor.update(event, bounds);
+        }
+    }
+
+    function drawParticle(ctx: CanvasRenderingContext2D, particle: Particle): void {
+        if (ctx) {
+            ctx.beginPath();
+            ctx.arc(particle.pos.x, particle.pos.y, particle.radius, 0, Math.PI * 2);
+            ctx.fillStyle = particle.color;
+            ctx.fill();
+        }
+        
+
+    }
+
+    function drawCursor(ctx: CanvasRenderingContext2D): void {
+        if (cursor) {
+            ctx.beginPath();
+            ctx.arc(cursor.pos.x, cursor.pos.y, cursor.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = cursor.color;
+            ctx.stroke();
+        }
+    }
+
+
+
     useEffect(() => {
         if (canvas) {
             const ctx = canvas.getContext("2d");
@@ -167,8 +219,8 @@ export function ParticleCanvas() {
         let animationFrameId: number;
         const render = () => {
             if (canvas && particles && cursor && bounds) {
-                updateParticles(cursor, particles);
-                updateCanvas(canvas, particles, cursor, bounds);
+                updateParticles();
+                updateCanvas();
             }
             animationFrameId = requestAnimationFrame(render);
         };
@@ -349,7 +401,7 @@ export function ParticleCanvas() {
             </div>
             <canvas id="ParticleCanvas" 
                 onMouseMove={(event) => {
-                    updateCursor(event, cursor, bounds);
+                    updateCursor(event);
                     if (isDragging && paintEnabled && cursor) {
                         handlePaint(event);
                     }
@@ -361,67 +413,4 @@ export function ParticleCanvas() {
             </canvas>
         </div>
     );
-}
-
-
-
-function updateCursor(event: React.MouseEvent, cursor: Cursor | null, bounds: DOMRect | null): void {
-    if (event && bounds && cursor) {
-        cursor.update(event, bounds);
-    }
-}
-
-function drawParticle(ctx: CanvasRenderingContext2D, particle: Particle): void {
-    ctx.beginPath();
-    ctx.arc(particle.pos.x, particle.pos.y, particle.radius, 0, Math.PI * 2);
-    ctx.fillStyle = particle.color;
-    ctx.fill();
-}
-
-function drawCursor(canvas: HTMLCanvasElement | null, cursor: Cursor): void {
-    if (canvas) {
-        const ctx = canvas?.getContext("2d");
-        if (ctx) {
-            ctx.beginPath();
-            ctx.arc(
-                cursor.pos.x, 
-                cursor.pos.y, 
-                cursor.radius, 
-                0, 
-                Math.PI * 2
-            );
-            ctx.strokeStyle = cursor.color;
-            ctx.stroke();
-        }
-    }
-}
-
-function updateParticles(cursor: Cursor, particles: Particle[]): void {
-    if (cursor) {
-        let affectedParticles = cursor.getParticlesInRange(particles);
-        cursor.applyForces(affectedParticles);
-
-        let filtered = particles.filter(particle => !affectedParticles.includes(particle));
-
-        filtered.forEach((particle: Particle) => {
-            particle.applyForce(Vector.Zero);
-        });
-    }
-}
-
-function updateCanvas(canvas: HTMLCanvasElement | null, particles: Particle[], cursor: Cursor | null, bounds: DOMRect | null): void {
-    
-    if (canvas && cursor && particles) {
-        const ctx = canvas.getContext("2d");
-
-        if (ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            particles.forEach((particle: Particle) => {
-                drawParticle(ctx, particle);
-            });
-            
-            drawCursor(canvas, cursor);
-        }
-    }
 }

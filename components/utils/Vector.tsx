@@ -34,6 +34,4 @@ export default class Vector {
     static sub(v1: Vector, v2: Vector): Vector {
         return new Vector(v1.x - v2.x, v1.y - v2.y);
     }
-
-    static Zero: Vector = new Vector(0, 0);
 }
