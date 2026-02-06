@@ -1,12 +1,12 @@
 "use client"
 import { ParticleCanvas } from "@/components/Particle/ParticleCanvas";
+import ParticlesCanvasV2 from "@/components/ParticlesCanvasV2";
 
 export default function Home() {
   return (
-    <main className="w-screen h-screen p-[10%]">
+    <main id="root" className="w-screen h-screen p-[10%]">
       Particle canvas
-      <ParticleCanvas />
-
+      <ParticlesCanvasV2 />
     </main>
   );
 }
