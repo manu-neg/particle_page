@@ -63,7 +63,7 @@ export default function useParticleCanvasContext(
         setMinStep,
         F_error,
         setFError
-        }), [
+    }), [
         cursorRadius,
         particleRadius,
         particleColor,
@@ -73,5 +73,6 @@ export default function useParticleCanvasContext(
         velocityIndicator,
         minStep,
         F_error
-    ]);
+    ]
+);
 }
