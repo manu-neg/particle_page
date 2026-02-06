@@ -3,20 +3,21 @@ import Vector from "../utils/Vector";
 
 const friction: number = 0.8;
 const stiffness: number = 10;
-const F_error: number = 0.01;
 const VEL_INDICATOR: boolean = false;
+export const minStep: number = -2; // 10 ^ minstep 
+const F_error: number = Math.pow(10, minStep) * 1.5;
 // F_error es la fuerza mínima para que se considere un movimiento.
 
 function accelerationCursor(w: number): number {
-    return 1 / ( stiffness * Math.log(w + 1.001) );    
+    return Math.max(Math.pow(10, minStep), 1 / ( stiffness * Math.log(w + 1.001) ));    
 }
 
 
 function accelerationSpawn(w: number): number {
-    return Math.sin(w / 100) * stiffness;
+    return Math.max(Math.pow(10, minStep), Math.sin(Math.min(w, 0.5) / 150) * stiffness);
 }
 
-export default class Particle {
+export class Particle {
     public spawn: Vector;
     public pos: Vector;
     public radius: number;

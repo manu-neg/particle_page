@@ -1,4 +1,4 @@
-import Particle from "../Particle/Particle";
+import { Particle } from "../Particle/Particle";
 import { getRandomColor } from "../utils/Color";
 import Vector from "../utils/Vector";
 
@@ -19,7 +19,6 @@ export default class Cursor {
         let bounds_vec = new Vector(bounds.x, bounds.y);
         let event_vec = new Vector(event.clientX, event.clientY);
         this.pos = Vector.sub(event_vec, bounds_vec);
-        console.log("cursor updated");
         
         
     }

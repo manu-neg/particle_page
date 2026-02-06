@@ -1,11 +1,12 @@
 import Cursor from "../Mouse/Cursor";
 import Vector from "../utils/Vector";
-import Particle from "./Particle";
+import {Particle, minStep} from "./Particle";
 import { useState, useEffect } from "react";
 
 const particle_amount: number = 0;
 const default_particle_radius: number = 1.5;
-const default_cursor_radius: number = 40;
+const default_cursor_radius: number = 30;
+
 
 export default function ParticleCanvas() {
 
@@ -13,17 +14,41 @@ export default function ParticleCanvas() {
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
     const [cursor, setCursor] = useState<Cursor | null>(new Cursor(default_cursor_radius, "#e1e1e1"));
     const [bounds, setBounds] = useState<DOMRect | null>(null);
-
+    
+    const [stateMemory, setStateMemory] = useState<Particle[]>([]);
     const [paintEnabled, setPaintEnabled] = useState<boolean>(false);
     const [isDragging, setIsDragging] = useState<boolean>(false);
+
+    function saveState(): void {
+        setStateMemory(particles.map(
+            p => {
+                let newP = new Particle(p.pos.x, p.pos.y, p.radius, p.color);
+                return newP; 
+            }
+        ));
+    }
+
+    function shuffleParticles(): void {
+        if (canvas) {
+            setParticles(particles.map(
+                p => {
+                    const x = Math.ceil(Math.random() * canvas.getBoundingClientRect().width 
+                    / Math.pow(10, minStep)) * Math.pow(10, minStep);
+                    const y = Math.ceil(Math.random() * canvas.getBoundingClientRect().height 
+                    / Math.pow(10, minStep)) * Math.pow(10, minStep);
+                    p.pos.x = x;
+                    p.pos.y = y;
+                    return p;
+                }
+            ));
+        }
+    }
 
     function handleTogglePaint(event: React.ChangeEvent<HTMLInputElement>): void {
         if (event.target.checked) {
             setPaintEnabled(true);
-            console.log("Paint enabled");
         } else {
             setPaintEnabled(false);
-            console.log("Paint disabled");
         }
     }
 
@@ -112,7 +137,14 @@ export default function ParticleCanvas() {
 
     return (
         <div className="w-full h-full">
-            <input type="checkbox" onChange={handleTogglePaint} id="togglePaint" />
+            <div className="w-full flex p-2 gap-4">
+                <span className="justify-between border-2 rounded-md p-[0.2em] flex">
+                    <label className="pr-[1em]">Draw</label>
+                    <input type="checkbox" onChange={handleTogglePaint} id="togglePaint" />
+                </span>
+                <button className="border-2 rounded-md p-[0.2em]" onClick={saveState}>Save state</button>
+                <button className="border-2 rounded-md p-[0.2em]" onClick={shuffleParticles}>Shuffle particles</button>
+            </div>
             <canvas id="ParticleCanvas" 
                 onMouseMove={(event) => {
                     updateCursor(event, cursor, bounds);
