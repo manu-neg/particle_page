@@ -32,10 +32,8 @@ export default function ParticleCanvas() {
         if (canvas) {
             setParticles(particles.map(
                 p => {
-                    const x = Math.ceil(Math.random() * canvas.getBoundingClientRect().width 
-                    / Math.pow(10, minStep)) * Math.pow(10, minStep);
-                    const y = Math.ceil(Math.random() * canvas.getBoundingClientRect().height 
-                    / Math.pow(10, minStep)) * Math.pow(10, minStep);
+                    const x = Math.ceil(Math.random() * canvas.getBoundingClientRect().width);
+                    const y = Math.ceil(Math.random() * canvas.getBoundingClientRect().height);
                     p.pos.x = x;
                     p.pos.y = y;
                     return p;
@@ -136,7 +134,7 @@ export default function ParticleCanvas() {
     }, [particles, canvas, cursor, bounds]);
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full bg-transparent">
             <div className="w-full flex p-2 gap-4">
                 <span className="justify-between border-2 rounded-md p-[0.2em] flex">
                     <label className="pr-[1em]">Draw</label>
