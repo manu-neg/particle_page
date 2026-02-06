@@ -55,7 +55,7 @@ export function ParticleCanvas() {
 
     function shuffleParticles(): void {
         if (canvas) {
-            setParticles(particles.map(
+            setParticles(stateMemory.map(
                 p => {
                     const x = Math.ceil(Math.random() * canvas.getBoundingClientRect().width);
                     const y = Math.ceil(Math.random() * canvas.getBoundingClientRect().height);
