@@ -1,5 +1,5 @@
 "use client"
-import ParticleCanvas from "@/components/Particle/ParticleCanvas";
+import { ParticleCanvas } from "@/components/Particle/ParticleCanvas";
 
 export default function Home() {
   return (
